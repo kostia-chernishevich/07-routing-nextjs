@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import css from "./Modal.module.css";
+
 
 export default function NoteModal({
   children,
@@ -11,8 +11,8 @@ export default function NoteModal({
   const close = () => router.back();
 
   return (
-    <div className={css.overlay} onClick={close}>
-      <div className={css.content} onClick={(e) => e.stopPropagation()}>
+    <div  onClick={close}>
+      <div  onClick={(e) => e.stopPropagation()}>
         {children}
         <button onClick={close}>Close</button>
       </div>

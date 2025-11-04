@@ -1,6 +1,6 @@
 import { fetchNoteById } from "@/lib/api";
-import NotePreview from "../../../../../../components/NotePreview/NotePreview";
-import NoteModal from "../../../../../../components/NoteModal/NoteModal"
+import NotePreview from "../../../../components/NotePreview/NotePreview";
+import NoteModal from "../../../../components/NoteModal/NoteModal"
 
 export default async function NotePage({
   params,

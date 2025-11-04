@@ -1,14 +1,13 @@
 import { fetchNotes } from "@/lib/api";
 
 interface TagPageProps {
-  params: Promise<{
+  params: {
     tag?: string[];
-  }>;
+  };
 }
 
 const TagPage = async ({ params }: TagPageProps) => {
-  const resolvedParams = await params; // розгортаємо проміс
-  const tag = resolvedParams.tag?.[0] || "all"; // тепер використовуємо розгорнуте значення
+  const tag = params.tag?.[0] || "all";
 
   const { notes } = await fetchNotes({
     page: 1,
