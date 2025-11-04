@@ -1,6 +1,6 @@
 import { fetchNoteById } from "@/lib/api";
 import NotePreview from "../../../../components/NotePreview/NotePreview";
-import NoteModal from "../../../../components/NoteModal/NoteModal"
+
 
 export default async function NotePage({
   params,
@@ -9,8 +9,8 @@ export default async function NotePage({
 }) {
   const note = await fetchNoteById(params.id);
   return (
-    <NoteModal>
+    
       <NotePreview note={note} />
-    </NoteModal>
+   
   );
 }
