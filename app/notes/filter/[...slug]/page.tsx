@@ -1,31 +1,38 @@
+import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query";
+import NotesClient from "./Notes.client";
 import { fetchNotes } from "@/lib/api";
+import { notFound } from "next/navigation";
 
-interface TagPageProps {
-  params: {
-    tag?: string[];
-  };
-}
+export default async function NotesPage({
+  params,
+}: {
+  params: Promise<{ slug?: string[] }>;
+}) {
+  const { slug } = await params;
 
-const TagPage = async ({ params }: TagPageProps) => {
-  const tag = params.tag?.[0] || "all";
+  const rawTag = slug?.[0] ?? "all";
+  const tag = rawTag === "all" ? undefined : rawTag;
 
-  const { notes } = await fetchNotes({
-    page: 1,
-    perPage: 12,
-    search: "",
-    tag: tag === "all" ? undefined : tag,
+  if (!rawTag) notFound();
+
+  const qc = new QueryClient();
+
+  await qc.prefetchQuery({
+    queryKey: ["notes", { tag: rawTag }],
+  
+    queryFn: () => fetchNotes({ tag, page: 1, perPage: 12, search: "" }),
   });
 
-  return (
-    <div>
-      <h1>Tag: {tag}</h1>
-      <ul>
-        {notes.map((note) => (
-          <li key={note.id}>{note.title}</li>
-        ))}
-      </ul>
-    </div>
-  );
-};
+  const state = dehydrate(qc);
 
-export default TagPage;
+  return (
+    <>
+      <h1 style={{ textAlign: "center", marginBottom: 20 }}>
+        Notes tagged: {rawTag}
+      </h1>
+      <HydrationBoundary state={state}>
+        <NotesClient tag={tag} />
+      </HydrationBoundary>
+    </>
+  );
+}
