@@ -2,6 +2,31 @@ import { HydrationBoundary, QueryClient, dehydrate } from "@tanstack/react-query
 import NotesClient from "./Notes.client";
 import { fetchNotes } from "@/lib/api";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+
+export async function generateMetadata({ params }: { params: { slug?: string[] } }): Promise<Metadata>
+ {
+  const { slug } = await params;
+  const rawTag = slug?.[0] ?? "all"; 
+  return {
+    title: `Notes tagged: ${rawTag}`,
+    description: `List of notes filtered by tag ${rawTag} on NoteHub.`,
+    openGraph: {
+       title: `Notes tagged: ${rawTag}`,
+      description: `List of notes filtered by tag ${rawTag} on NoteHub.`,
+     url: `https://07-routing-nextjs-khaki-pi.vercel.app/notes/filter/${rawTag}`,
+      images:[{
+        url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',
+          width: 1200,
+          height: 630,
+        
+      }
+      ],
+      type:'website',
+
+    }
+  }
+};
 
 export default async function NotesPage({
   params,

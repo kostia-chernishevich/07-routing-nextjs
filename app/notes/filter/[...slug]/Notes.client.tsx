@@ -4,11 +4,10 @@ import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { fetchNotes } from "@/lib/api";
 import type { Note } from "@/types/note";
-
+import Link from "next/link";
 import { SearchBox } from "../../../../components/SearchBox/SearchBox";
 import { Pagination } from "../../../../components/Pagination/Pagination";
-import { Modal } from "../../../../components/Modal/Modal";
-import { NoteForm } from "../../../../components/NoteForm/NoteForm";
+
 import { NoteList } from "../../../../components/NoteList/NoteList";
 
 import styles from "./Notes.client.module.css";
@@ -33,10 +32,7 @@ export default function NotesClient({ tag }: NotesClientProps) {
     return () => clearTimeout(id);
   }, [searchInput]);
 
-  // модалка
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  
 
   // дані
   const queryKey = useMemo(
@@ -71,9 +67,9 @@ export default function NotesClient({ tag }: NotesClientProps) {
             onChange={(v: string) => setSearchInput(v)}
           />
         </div>
-        <button type="button" className={styles.createBtn} onClick={openModal}>
+        <Link href="/notes/action/create"  className={styles.createBtn} >
           + Create note
-        </button>
+        </Link>
         {isFetching && <span className={styles.refreshing}>Refreshing…</span>}
       </div>
 
@@ -87,12 +83,7 @@ export default function NotesClient({ tag }: NotesClientProps) {
       {/* Список (NoteList сам показує Loader/помилку/порожній стан) */}
       <NoteList notes={notes} isLoading={isLoading} isError={!!error} />
 
-      {/* Модалка */}
-      {isModalOpen && (
-        <Modal onClose={closeModal}>
-          <NoteForm onClose={closeModal} />
-        </Modal>
-      )}
+   
     </section>
   );
 }
